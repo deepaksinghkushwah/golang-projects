@@ -1,0 +1,59 @@
+{{ template  "header" . }}
+<div class="row">
+  <div class="col-md-3">
+    <form method="POST">
+      <table class="table table-bordered">
+        <tr>
+          <td><input type="text" class="form-control" name="title" placeholder="Enter title"></td>
+        </tr>
+        <tr>
+        <td> <button class="btn btn-primary" type="submit">Add</button></td>
+        </tr>
+      </table>
+    </form>
+  </div>
+  <div class="col-md-9">
+    <table class="table table-bordered">
+  <thead>
+    <tr>
+      
+      <th>Title</th>
+      <th>Created At</th>
+      <th>Updated At</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{range $todo := .PageData}}
+    <tr>
+      
+      <td>{{ $todo.Title }}</td>
+      <td>{{ $todo.CreatedAt }}</td>
+      <td>{{ $todo.UpdatedAt }}</td>
+      <td>{{ $todo.Status }}</td>
+      <td>
+      {{ if eq $todo.Status "Incomplete"}}
+        <a title="Click Here To Mark Completed" href="/change-status?id={{ $todo.ID }}"><i class="fas fa-check"></i></a>
+      {{ end }}
+
+      {{ if eq $todo.Status "Completed"}}
+        <a title="Click Here To Mark Incompleted" href="/change-status?id={{ $todo.ID }}"><i class="fas fa-times"></i></a>
+      {{ end }}
+
+      </td>
+    </tr>
+    {{end}}
+  </tbody>
+  <tfoot>
+    <tr>
+    <td colspan="6">{{ .Pager.Render}}</td>
+    </tr>
+  </tfoot>
+  
+</table>
+  </div>
+</div>
+
+
+{{ template  "footer" }}
