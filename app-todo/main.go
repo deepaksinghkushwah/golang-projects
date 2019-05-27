@@ -80,7 +80,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	pager := pagination.New(totalRows, perPage, currentPage, url)
 	page.Pager = pager
 
-	rows, err := db.Query("SELECT id, title, created_at, updated_at, status FROM todo limit ?,?", offset, perPage)
+	rows, err := db.Query("SELECT id, title, created_at, updated_at, status FROM todo ORDER BY id DESC limit ?,?", offset, perPage)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			log.Println("Error: no results")
