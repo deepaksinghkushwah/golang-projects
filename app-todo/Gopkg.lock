@@ -2,14 +2,6 @@
 
 
 [[projects]]
-  digest = "1:92c561ce37cf0816843a327b058cb58dea74beb5b8d57d1091686e5a4cc72ac5"
-  name = "github.com/bvinc/go-sqlite-lite"
-  packages = ["sqlite3"]
-  pruneopts = "UT"
-  revision = "7ad36fb79d98bb6c4984f861f702c2b92586aeaf"
-  version = "v0.6.1"
-
-[[projects]]
   digest = "1:c79fb010be38a59d657c48c6ba1d003a8aa651fa56b579d959d74573b7dff8e1"
   name = "github.com/gorilla/context"
   packages = ["."]
@@ -53,7 +45,6 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/bvinc/go-sqlite-lite/sqlite3",
     "github.com/gorilla/mux",
     "github.com/gorilla/sessions",
     "github.com/mattn/go-sqlite3",
