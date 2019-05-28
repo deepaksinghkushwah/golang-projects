@@ -97,13 +97,10 @@ func LoginRequired(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//RedirectWithMessage will redirect user with message on a page
 func RedirectWithMessage(w http.ResponseWriter, r *http.Request, msg string) {
 	_, flashSession := GetCookieStore(r, FLASH_SESSION)
 	flashSession.AddFlash(msg, "message")
 	flashSession.Save(r, w)
 	http.Redirect(w, r, "/blog/list", http.StatusSeeOther)
-}
-
-func test() {
-
 }
