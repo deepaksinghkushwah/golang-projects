@@ -103,3 +103,7 @@ func RedirectWithMessage(w http.ResponseWriter, r *http.Request, msg string) {
 	flashSession.Save(r, w)
 	http.Redirect(w, r, "/blog/list", http.StatusSeeOther)
 }
+
+func test() {
+
+}
