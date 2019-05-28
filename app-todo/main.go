@@ -33,7 +33,7 @@ func main() {
 	// following line should be called after setupRouter function, otherwise system not work
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
 
-	http.ListenAndServe(":5000", r)
+	http.ListenAndServe(":8000", r)
 }
 
 func setupRouter() *mux.Router {

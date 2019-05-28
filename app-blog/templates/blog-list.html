@@ -1,0 +1,31 @@
+{{template "header" .}}
+{{ $loggedIn := .IsLoggedIn}}
+<span class="pull-right"><strong>Total {{.Pager.TotalRecords}} record(s) in {{.Pager.TotalPages}} page(s)</strong></span>
+{{ .Pager.Render}}
+{{ $userID := .UserID}}
+{{ range $blog := .PageData }}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel panel-heading">
+                    <div>                        
+                        {{ if eq $loggedIn true }}
+                            {{ if eq $userID $blog.Author}}
+
+                                <a class="btn btn-primary" href="/blog/edit/{{$blog.ID}}">Edit</a>
+                                <a class="btn btn-primary deleteBlog" data-value="{{$blog.ID}}" href="javascript:void(0)">Delete</a>
+                            {{ end }}
+                        {{ end }}
+                        &nbsp;<span class="pull-right">Date Created: {{ $blog.CreatedAt }}</span>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <a href="/blog/detail/{{ $blog.ID }}">{{ $blog.Title }}</a>
+                </div>
+            </div>            
+        </div>
+    </div>    
+
+{{ end }}
+{{ .Pager.Render}}
+{{template "footer" .}}

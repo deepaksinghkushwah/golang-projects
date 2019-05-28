@@ -1,0 +1,19 @@
+{{template "header" .}}
+
+<form action="/blog/add" method="POST">
+    <table class="table table-striped">
+        <tr>
+            <td>Title</td>
+            <td><input type="text" class="form-control" name="title" id=""></td>
+        </tr>
+        <tr>
+            <td>Content</td>
+            <td><textarea rows="5" class="form-control editor" name="content"></textarea></td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td><input type="submit" class="btn btn-primary" name="save" value="Save" id=""> <a href="/blog/list" class="btn btn-danger">Cancel</a></td>
+        </tr>
+    </table>
+</form>
+{{template "footer" .}}

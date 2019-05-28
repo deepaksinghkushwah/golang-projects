@@ -1,0 +1,27 @@
+{{template "header" .}}
+
+<form action="/register" method="POST">
+    <table class="table table-striped">
+        <tr>
+            <td>Full Name</td>
+            <td><input type="text" name="fullname" id=""></td>
+        </tr>
+        <tr>
+            <td>Username</td>
+            <td><input type="text" name="username" id=""></td>
+        </tr>
+        <tr>
+            <td>Password</td>
+            <td><input type="password" name="password" id=""></td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td><input type="text" name="email" id=""></td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td><input type="submit" class="btn btn-primary" name="register" value="Register" id=""></td>
+        </tr>
+    </table>
+</form>
+{{template "footer" .}}
