@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/deepaksinghkushwah/app-blog/utils"
+	"github.com/deepaksinghkushwah/projects/app-blog/utils"
 )
 
 var tpl *template.Template

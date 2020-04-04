@@ -5,9 +5,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/deepaksinghkushwah/app-blog/blog"
-	"github.com/deepaksinghkushwah/app-blog/user"
-	"github.com/deepaksinghkushwah/app-blog/utils"
+	"github.com/deepaksinghkushwah/projects/app-blog/blog"
+	"github.com/deepaksinghkushwah/projects/app-blog/user"
+	"github.com/deepaksinghkushwah/projects/app-blog/utils"
 	"github.com/gorilla/mux"
 )
 

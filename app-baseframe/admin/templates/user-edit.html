@@ -1,0 +1,46 @@
+{{template "header" .}}
+<form id="user-create-form" method="post">
+    <input type="hidden" name="id" value="{{.PageData.ID}}"/>
+    <table class="table">
+        <tr>
+            <td>First Name</td>            
+            <td><input type="text" class="form-control required" name="firstname" value="{{.PageData.Profile.Firstname}}" id="firstname"></td>
+        </tr>        
+        <tr>
+            <td>Last Name</td>            
+            <td><input type="text" class="form-control required" name="lastname" value="{{.PageData.Profile.Lastname}}" id="lastname"></td>
+        </tr>
+        <tr>
+            <td>Contact Numer</td>            
+            <td><input type="text" class="form-control required" name="contactno" value="{{.PageData.Profile.ContactNo}}" id="contactno"></td>
+        </tr>  
+        <tr>
+            <td>Email</td>            
+            <td><input type="text" class="form-control required" name="email" value="{{.PageData.Email}}" id="email"></td>
+        </tr>  
+        <tr>
+            <td>Username</td>            
+            <td><input type="text" class="form-control required" name="username" value="{{.PageData.Username}}" id="username"></td>
+        </tr>  
+       
+          
+        <tr>
+            <td>&nbsp;</td>            
+            <td>
+                <input type="submit" class="btn btn-primary" name="submit" id="submit" value="Update User">
+                <input type="reset" class="btn btn-danger" onclick="javascript:window.location.href='/user/list'" name="reset" id="reset" value="Cancel">
+            </td>
+        </tr>
+        
+    </table>
+</form>
+{{define "js-footer"}}
+<script src="/js/jquery-validate/jquery.validate.min.js"></script>
+<script>
+$(document).ready(function(){
+   $('#user-create-form').validate();
+});
+</script>
+
+{{end}}
+{{template "footer" .}}

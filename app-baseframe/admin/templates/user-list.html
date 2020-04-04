@@ -1,0 +1,26 @@
+{{template "header" .}}
+{{ $loggedIn := .IsLoggedIn}}
+<span class="pull-right"><strong>Total {{.Pager.TotalRecords}} record(s) in {{.Pager.TotalPages}} page(s)</strong></span>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th width="25%">ID</th>
+            <th width="50%">Full Name</th>
+            <th width="25%">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+{{ $userID := .UserID}}
+{{ range $profile := .PageData }}
+    <tr>
+        <td>{{$profile.UserID}}</td> 
+        <td>{{$profile.Firstname}} {{$profile.Lastname}}</td>
+        <td><a href="/user/edit/{{$profile.UserID}}"><i class="fa fa-pencil"></i></a></td>
+    </tr>
+
+{{ end }}
+    </tbody>
+</table>
+{{ .Pager.Render}}
+{{template "footer" .}}

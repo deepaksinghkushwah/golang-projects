@@ -1,0 +1,48 @@
+{{template "header" .}}
+<form id="user-create-form" method="post">
+    <table class="table">
+        <tr>
+            <td>First Name</td>            
+            <td><input type="text" class="form-control required" name="firstname" id="firstname"></td>
+        </tr>        
+        <tr>
+            <td>Last Name</td>            
+            <td><input type="text" class="form-control required" name="lastname" id="lastname"></td>
+        </tr>
+        <tr>
+            <td>Contact Numer</td>            
+            <td><input type="text" class="form-control required" name="contactno" id="contactno"></td>
+        </tr>  
+        <tr>
+            <td>Email</td>            
+            <td><input type="text" class="form-control required" name="email" id="email"></td>
+        </tr>  
+        <tr>
+            <td>Username</td>            
+            <td><input type="text" class="form-control required" name="username" id="username"></td>
+        </tr>  
+        <tr>
+            <td>Password</td>            
+            <td><input type="text" class="form-control required" name="password" id="password"></td>
+        </tr>
+          
+        <tr>
+            <td>&nbsp;</td>            
+            <td>
+                <input type="submit" class="btn btn-primary" name="submit" id="submit" value="Create User">
+                <input type="reset" class="btn btn-danger" onclick="javascript:window.location.href='/user/list'" name="reset" id="reset" value="Cancel">
+            </td>
+        </tr>
+        
+    </table>
+</form>
+{{define "js-footer"}}
+<script src="/js/jquery-validate/jquery.validate.min.js"></script>
+<script>
+$(document).ready(function(){
+   // $('#user-create-form').validate();
+});
+</script>
+
+{{end}}
+{{template "footer" .}}

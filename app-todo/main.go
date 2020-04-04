@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/deepaksinghkushwah/app-todo/pagination"
@@ -14,7 +15,8 @@ import (
 )
 
 var tpl *template.Template
-var perPage = 10
+var perPage = 1000
+var wg sync.WaitGroup
 
 //Todo struct
 type Todo struct {
@@ -41,6 +43,7 @@ func setupRouter() *mux.Router {
 	r.HandleFunc("/", HomeHandler).Methods("GET")
 	r.HandleFunc("/", HomePostHandler).Methods("POST")
 	r.HandleFunc("/change-status", ChangeStatusHandler).Methods("GET")
+	r.HandleFunc("/populate", PopulateHandler).Methods("GET")
 	return r
 }
 
@@ -53,57 +56,66 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln(err)
 	}
 	defer db.Close()*/
+
 	page, _ := utils.GetPageStructure(w, r)
 	var todos []Todo
 	db := utils.GetDBO()
 	defer db.Close()
 
-	q := "SELECT count(id) FROM todo ORDER BY id DESC"
-	var totalRows int
-	err := db.QueryRow(q).Scan(&totalRows)
-	//fmt.Println("Total rows : ", totalRows)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	var offset int
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
 
-	currentPage := 0
-	if r.URL.Query().Get("page") != "" {
-		currentPage, _ = strconv.Atoi(r.URL.Query().Get("page"))
-		offset = (currentPage - 1) * perPage
-	} else {
-		currentPage = 0
-		offset = 0
-	}
-
-	url := "/blog/list"
-	pager := pagination.New(totalRows, perPage, currentPage, url)
-	page.Pager = pager
-
-	rows, err := db.Query("SELECT id, title, created_at, updated_at, status FROM todo ORDER BY id DESC limit ?,?", offset, perPage)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			log.Println("Error: no results")
-		} else {
+		q := "SELECT count(id) FROM todo ORDER BY id DESC"
+		var totalRows int
+		err := db.QueryRow(q).Scan(&totalRows)
+		//fmt.Println("Total rows : ", totalRows)
+		if err != nil {
 			log.Fatalln(err)
 		}
-	} else {
-		for rows.Next() {
-			var id, status int
-			var title, istatus string
-			var createdAt, updatedAt time.Time
-			rows.Scan(&id, &title, &createdAt, &updatedAt, &status)
-			if status == 1 {
-				istatus = "Completed"
-			} else {
-				istatus = "Incomplete"
-			}
-			todos = append(todos, Todo{ID: id, Title: title, CreatedAt: createdAt.Format(time.RFC1123), UpdatedAt: updatedAt.Format(time.RFC1123), Status: istatus})
+		var offset int
+
+		currentPage := 0
+		if r.URL.Query().Get("page") != "" {
+			currentPage, _ = strconv.Atoi(r.URL.Query().Get("page"))
+			offset = (currentPage - 1) * perPage
+		} else {
+			currentPage = 0
+			offset = 0
 		}
-	}
+
+		url := "/blog/list"
+		pager := pagination.New(totalRows, perPage, currentPage, url)
+		page.Pager = pager
+
+		rows, err := db.Query("SELECT id, title, created_at, updated_at, status FROM todo ORDER BY id DESC limit ?,?", offset, perPage)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				log.Println("Error: no results")
+			} else {
+				log.Fatalln(err)
+			}
+		} else {
+			for rows.Next() {
+				var id, status int
+				var title, istatus string
+				var createdAt, updatedAt time.Time
+				rows.Scan(&id, &title, &createdAt, &updatedAt, &status)
+				if status == 1 {
+					istatus = "Completed"
+				} else {
+					istatus = "Incomplete"
+				}
+				todos = append(todos, Todo{ID: id, Title: title, CreatedAt: createdAt.Format(time.RFC1123), UpdatedAt: updatedAt.Format(time.RFC1123), Status: istatus})
+			}
+		}
+		wg.Done()
+	}()
+
+	wg.Wait()
 
 	page.PageData = todos
-	err = tpl.ExecuteTemplate(w, "index.html", page)
+	err := tpl.ExecuteTemplate(w, "index.html", page)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -134,7 +146,7 @@ func HomePostHandler(w http.ResponseWriter, r *http.Request) {
 
 func ChangeStatusHandler(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
-	var dbStatus bool
+	var dbStatus int
 	db := utils.GetDBO()
 	defer db.Close()
 	err := db.QueryRow("SELECT `status` FROM todo WHERE id = ?", id).Scan(&dbStatus)
@@ -146,7 +158,12 @@ func ChangeStatusHandler(w http.ResponseWriter, r *http.Request) {
 			log.Fatalln(err)
 		}
 	} else {
-		newStatus := !dbStatus
+		var newStatus int
+		if dbStatus == 1 {
+			newStatus = 0
+		} else {
+			newStatus = 1
+		}
 		updatedAt := time.Now().Format("2006-01-02 15:04:05")
 		_, err := db.Exec("UPDATE todo SET updated_at = ?, status = ? WHERE id = ?", updatedAt, newStatus, id)
 		if err != nil {
@@ -157,4 +174,27 @@ func ChangeStatusHandler(w http.ResponseWriter, r *http.Request) {
 		flashSession.Save(r, w)
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
+}
+
+func PopulateHandler(w http.ResponseWriter, r *http.Request) {
+	db := utils.GetDBO()
+	defer db.Close()
+	stmt, err := db.Prepare("INSERT INTO todo (title, created_at, status) values(?,?,?)")
+	defer stmt.Close()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	wg.Add(1)
+	go func() {
+		for i := 0; i < 10000; i++ {
+			title := utils.GenerateWords(10)
+			createdAt := time.Now().Format("2006-01-02 15:04:05")
+			_, err = stmt.Exec(title, createdAt, 1)
+			if err != nil {
+				log.Fatalln(err)
+			}
+		}
+		wg.Done()
+	}()
+	wg.Wait()
 }

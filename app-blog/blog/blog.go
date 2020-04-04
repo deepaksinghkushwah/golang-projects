@@ -12,8 +12,8 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/deepaksinghkushwah/app-blog/pagination"
-	"github.com/deepaksinghkushwah/app-blog/utils"
+	"github.com/deepaksinghkushwah/projects/app-blog/pagination"
+	"github.com/deepaksinghkushwah/projects/app-blog/utils"
 )
 
 var tpl *template.Template
@@ -63,7 +63,8 @@ func List(w http.ResponseWriter, r *http.Request) {
 	err := db.QueryRow(q).Scan(&totalRows)
 	//fmt.Println("Total rows : ", totalRows)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println("Herererererer")
+		log.Println(err)
 	}
 	var offset int
 
@@ -80,13 +81,11 @@ func List(w http.ResponseWriter, r *http.Request) {
 	pager := pagination.New(totalRows, perPage, currentPage, url)
 	page.Pager = pager
 
-	result, err := db.Query("SELECT id, title, content, created_at, author FROM blog ORDER BY id DESC limit ?,?", offset, perPage)
+	sql := "SELECT id, title, content, created_at, author FROM blog ORDER BY id DESC limit " + strconv.Itoa(offset) + "," + strconv.Itoa(perPage)
+	fmt.Println(sql)
+	result, err := db.Query(sql)
 	if err != nil {
-		if err == sql.ErrNoRows {
-
-		} else {
-			log.Fatalln(err)
-		}
+		log.Println("herer", err)
 	} else {
 		for result.Next() {
 			var id, title string
@@ -111,6 +110,7 @@ func List(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// GetComments return comments for blog
 func GetComments(blogID int) []Comment {
 	var comments []Comment
 	db := utils.GetDB()
@@ -197,6 +197,7 @@ func DetailBlogGetHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// GetAuthor get the author
 func GetAuthor(userID int) Author {
 	var author Author
 	db := utils.GetDB()

@@ -16,18 +16,20 @@
     <table class="table table-bordered">
   <thead>
     <tr>
-      
-      <th>Title</th>
-      <th>Created At</th>
-      <th>Updated At</th>
-      <th>Status</th>
-      <th>Action</th>
+      <th>#</th>
+      <th>&nbsp;</th>
+      <th width="40%">Title</th>
+      <th width="20%">Created At</th>
+      <th width="20%">Updated At</th>
+      <th width="10%">Status</th>
+      <th width="10%">Action</th>
     </tr>
   </thead>
   <tbody>
     {{range $todo := .PageData}}
     <tr>
-      
+      <td>{{ $todo.ID }}</td>
+      <td><img src="/images/todo.png" width="100"></td>
       <td>{{ $todo.Title }}</td>
       <td>{{ $todo.CreatedAt }}</td>
       <td>{{ $todo.UpdatedAt }}</td>
