@@ -8,7 +8,7 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
-	utils "github.com/deepaksinghkushwah/projects/app-baseframe/utils/general"
+	utils "baseframe/utils/general"
 )
 
 var tpl *template.Template

@@ -5,8 +5,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/deepaksinghkushwah/projects/app-baseframe/front/user"
-	utils "github.com/deepaksinghkushwah/projects/app-baseframe/utils/general"
+	"baseframe/front/user"
+	utils "baseframe/utils/general"
+
 	"github.com/gorilla/mux"
 )
 

@@ -14,8 +14,8 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
-	utils "github.com/deepaksinghkushwah/projects/app-baseframe/utils/general"
-	"github.com/deepaksinghkushwah/projects/app-baseframe/utils/pagination"
+	utils "baseframe/utils/general"
+	"baseframe/utils/pagination"
 )
 
 // User object
